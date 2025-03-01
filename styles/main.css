@@ -2,3 +2,16 @@
 body {
     font-family: Arial, sans-serif;
 }
+
+
+@media (max-width: 512px) {
+    .nav-mobile{
+        @apply flex-col justify-around max-w-sm mx-auto px-2;
+    }
+}
+
+@media (max-width: 512px) {
+    .div-mobile {
+        @apply flex-col space-y-2 text-center;
+    }
+}

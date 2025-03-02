@@ -10,17 +10,36 @@
 <body>
 
     <!-- Header wird hier dynamisch geladen -->
-    <div id="header"></div>    
+    <div id="header"></div>
 
-    <main class="max-w-7xl mx-auto p-4">
-        <h1 class="text-2xl font-bold">Impressum</h1>
-        <p>Hier steht dein Impressum. Füge deine Unternehmensdaten und rechtlichen Informationen ein.</p>
+    <main class="container ml-8 mt-8 text-left">
+        <!-- Hier wird der Impressumstext geladen -->
+        <div id="impressum-inhalt">Lade Impressum...</div>
     </main>
 
     <!-- Footer wird hier dynamisch geladen -->
     <div id="footer"></div>
 
+    <script>
+        // Impressumstext per fetch() laden
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch("../components/impressumtext.html")
+                .then(response => {
+                    if (!response.ok) throw new Error("Fehler beim Laden der Impressumsseite.");
+                    return response.text();
+                })
+                .then(html => {
+                    document.getElementById("impressum-inhalt").innerHTML = html;
+                })
+                .catch(error => {
+                    console.error(error);
+                    document.getElementById("impressum-inhalt").innerHTML = "Fehler beim Laden des Impressums.";
+                });
+        });
+    </script>
+        
     <script src="../scripts/main.js"></script>
+
 
 </body>
 </html>

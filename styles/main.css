@@ -1,9 +1,10 @@
 /* Globale Stile */
 body {
+    background-color: rgba(107, 228, 134, 0.3); 
     font-family: Arial, sans-serif;
 }
 
-
+/*
 @media (max-width: 512px) {
     .nav-mobile{
         @apply flex-col justify-around max-w-sm mx-auto px-2;
@@ -15,3 +16,4 @@ body {
         @apply flex-col space-y-2 text-center;
     }
 }
+*/

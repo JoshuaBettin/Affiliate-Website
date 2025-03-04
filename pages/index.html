@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Affiliate Website - Deine Plattform für Produktempfehlungen">
+    <title>Affiliate Website</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+
+    <!-- Header wird hier dynamisch geladen -->
+    <div id="header"></div>
+
+    <main class="container mx-auto p-4 text-center min-h-screen">
+        <h1 class="text-3xl font-bold text-gray-600 mt-8 mb-4">Willkommen auf meiner Affiliate-Website</h1>
+        <p class="text-gray-500">Starten Sie durch mit unseren Top-Empfehlungen</p>
+    </main>
+
+    <!-- Footer wird hier dynamisch geladen -->
+    <div id="footer"></div>
+
+    <script>
+        // Dynamisches Laden von Header und Footer
+        document.addEventListener('DOMContentLoaded', function() {
+            // Header laden
+            fetch('components/header.html')
+                .then(response => response.text())
+                .then(data => document.getElementById('header').innerHTML = data)
+                .catch(error => console.error('Header konnte nicht geladen werden:', error));
+
+            // Footer laden
+            fetch('components/footer.html')
+                .then(response => response.text())
+                .then(data => document.getElementById('footer').innerHTML = data)
+                .catch(error => console.error('Footer konnte nicht geladen werden:', error));
+        });
+    </script>
+    <script src="scripts/main.js"></script>
+</body>
+</html>

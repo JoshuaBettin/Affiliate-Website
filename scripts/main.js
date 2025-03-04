@@ -1,25 +1,33 @@
-document.addEventListener("DOMContentLoaded", function () {
-    console.log("✅ DOM vollständig geladen, starte Skript.");
-
-    // Kopf- und Fußzeile laden
-    ladeKopfUndFusszeilen();
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("✅ DOM vollständig geladen");
+    initHeaderFooter();
+    initDynamicComponents();
 });
 
-// 🟢 Funktion zum Laden der Kopf- und Fußzeilen
-function ladeKopfUndFusszeilen() {
-    fetch("/components/header.html")
-        .then(response => response.ok ? response.text() : Promise.reject("❌ Fehler beim Laden der Kopfzeile"))
-        .then(data => {
-            document.getElementById("header").innerHTML = data;
-            console.log("✅ Kopfzeile erfolgreich geladen.");
-        })
-        .catch(error => console.error(error));
+function initHeaderFooter() {
+    const loadComponent = async (path, elementId) => {
+        try {
+            const response = await fetch(path);
+            if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+            const html = await response.text();
+            document.getElementById(elementId).innerHTML = html;
+        } catch (error) {
+            console.error(`❌ Fehler bei ${path}:`, error);
+            document.getElementById(elementId).innerHTML = `
+                <div class="p-4 bg-red-50 text-red-700 text-center">
+                    ${elementId} konnte nicht geladen werden – Bitte Seite neu laden
+                </div>
+            `;
+        }
+    };
 
-    fetch("/components/footer.html")
-        .then(response => response.ok ? response.text() : Promise.reject("❌ Fehler beim Laden der Fußzeile"))
-        .then(data => {
-            document.getElementById("footer").innerHTML = data;
-            console.log("✅ Fußzeile erfolgreich geladen.");
-        })
-        .catch(error => console.error(error));
+    loadComponent('/components/header.html', 'header');
+    loadComponent('/components/footer.html', 'footer');
+}
+
+function initDynamicComponents() {
+    // Für zukünftige Erweiterungen
+    document.querySelectorAll('[data-dynamic]').forEach(element => {
+        console.log('Dynamisches Element:', element);
+    });
 }

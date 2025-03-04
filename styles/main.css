@@ -1,19 +1,23 @@
-/* Globale Stile */
-body {
-    background-color: rgba(107, 228, 134, 0.3); 
-    font-family: Arial, sans-serif;
+/* Custom CSS Ergänzungen zu Tailwind */
+.hover-scale {
+    transition: transform 0.2s ease-in-out;
 }
 
-/*
-@media (max-width: 512px) {
-    .nav-mobile{
-        @apply flex-col justify-around max-w-sm mx-auto px-2;
-    }
+.hover-scale:hover {
+    transform: scale(1.05);
 }
 
-@media (max-width: 512px) {
-    .div-mobile {
-        @apply flex-col space-y-2 text-center;
+.loading-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+/* Druckoptimierung */
+@media print {
+    header, footer, nav {
+        display: none !important;
     }
 }
-*/

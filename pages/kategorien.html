@@ -3,34 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Alle Produktkategorien im Überblick">
-    <title>Kategorien - Affiliate Website</title>
+    <title>Produktkategorien - FundDepot.de</title>
+    <meta name="description" content="Übersicht aller Produktkategorien bei FundDepot.de - Finde die besten Produkte in deiner Kategorie">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/styles/main.css">
-
-    <!-- Standard-Favicon -->
-<link rel="icon" type="image/x-icon" href="/favicon.ico">
-
-<!-- Für moderne Browser -->
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-
-<!-- Für Apple-Geräte -->
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 </head>
 
-<body class="bg-gray-100 flex flex-col min-h-screen">
-    <div id="header" role="banner"></div>
+<body class="bg-gray-50">
+    <div id="header"></div>
 
-    <main role="main" class="flex-grow container mx-auto p-6">
-        <div class="max-w-4xl mx-auto">
-            <h1 class="text-4xl font-bold text-blue-800 mb-8 text-center">📦 Produktkategorien</h1>
-            <!-- Originalinhalt bleibt erhalten -->
-        </div>
+    <main class="min-h-screen">
+        <section class="py-16">
+            <div class="max-w-7xl mx-auto px-4">
+                <h1 class="text-4xl font-bold text-gray-800 mb-12 text-center">
+                    📦 Unsere Produktkategorien
+                </h1>
+
+                <div class="bg-white rounded-xl shadow-md mb-12 p-6">
+                    <div class="flex items-center justify-between mb-8">
+                        <h2 class="text-3xl font-semibold text-green-600">
+                            🏃 Wearables & Smartwatches
+                        </h2>
+                        <span class="text-gray-500">4 Produkte</span>
+                    </div>
+                    <div id="wearables-container" 
+                         class="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
+                         data-kategorie="wearables"></div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md mb-12 p-6">
+                    <div class="flex items-center justify-between mb-8">
+                        <h2 class="text-3xl font-semibold text-green-600">
+                            🎧 Audio & Kopfhörer
+                        </h2>
+                        <span class="text-gray-500">3 Produkte</span>
+                    </div>
+                    <div id="audio-container" 
+                         class="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
+                         data-kategorie="audio"></div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center justify-between mb-8">
+                        <h2 class="text-3xl font-semibold text-green-600">
+                            🔌 Tech-Zubehör
+                        </h2>
+                        <span class="text-gray-500">2 Produkte</span>
+                    </div>
+                    <div id="zubehoer-container" 
+                         class="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
+                         data-kategorie="zubehoer"></div>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <div id="footer" role="contentinfo"></div>
+    <div id="footer"></div>
 
     <script src="/scripts/main.js"></script>
+    <script>
+          document.addEventListener("DOMContentLoaded", async () => {
+        initHeaderFooter();
+    
+        await loadCategoryProducts('wearables-container', 'wearables');
+        await loadCategoryProducts('audio-container', 'audio');
+        await loadCategoryProducts('zubehoer-container', 'zubehoer');
+        
+        setTimeout(() => {
+            initImageSwitchers();
+            enforceCardHeights();
+        }, 100);
+    });
+
+        async function loadCategoryProducts(containerId, kategorie) {
+            try {
+                const products = await loadAllProducts();
+                const container = document.getElementById(containerId);
+                
+                const filtered = Array.from(products).filter(product => {
+                    return product.dataset.kategorie.split(' ').includes(kategorie);
+                });
+
+                container.innerHTML = filtered.map(p => p.outerHTML).join('');
+            } catch (error) {
+                console.error(`Fehler beim Laden von ${containerId}:`, error);
+                document.getElementById(containerId).innerHTML = `
+                    <p class="text-red-500">Produkte konnten nicht geladen werden</p>
+                `;
+            }
+        }
+
+        async function loadAllProducts() {
+            const products = [
+                '/components/products/product1.html',
+                '/components/products/product2.html',
+                '/components/products/product3.html'
+            ];
+
+            const productHtml = await Promise.all(
+                products.map(url => 
+                    fetch(`${BASE_URL}${url}`)
+                    .then(res => res.text())
+                    .then(html => {
+                        const wrapper = document.createElement('div');
+                        wrapper.innerHTML = html;
+                        return wrapper.firstElementChild;
+                    })
+                )
+            );
+            
+            return productHtml;
+        }
+
+        function enforceCardHeights() {
+            const cards = document.querySelectorAll('.produkt-karte');
+            let maxHeight = 0;
+            
+            cards.forEach(card => {
+                const height = card.offsetHeight;
+                if(height > maxHeight) maxHeight = height;
+            });
+            
+            cards.forEach(card => {
+                card.style.minHeight = `${maxHeight}px`;
+            });
+        }
+    </script>
 </body>
 </html>

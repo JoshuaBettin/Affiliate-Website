@@ -3,50 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Affiliate Website - Deine Plattform für Produktempfehlungen">
-    <title>Affiliate Website</title>
+    <title>FundDepot.de - Die besten Produktempfehlungen</title>
+    <meta name="description" content="FundDepot.de - Unabhängige Produkttests und Kaufempfehlungen ✓ Ausführliche Vergleiche ✓ Aktuelle Angebote ✓ Mit Affiliate-Links">
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "FundDepot.de",
+        "url": "https://funddepot.de",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://funddepot.de?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="styles/main.css">
-
-    <!-- Standard-Favicon -->
-<link rel="icon" type="image/x-icon" href="/favicon.ico">
-
-<!-- Für moderne Browser -->
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-
-<!-- Für Apple-Geräte -->
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="/styles/main.css">
+    
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 </head>
-<body>
 
-    <!-- Header wird hier dynamisch geladen -->
+<body class="bg-gray-50">
     <div id="header"></div>
 
-    <main class="container mx-auto p-4 text-center min-h-screen">
-        <h1 class="text-3xl font-bold text-gray-600 mt-8 mb-4">Willkommen auf meiner Affiliate-Website</h1>
-        <p class="text-gray-500">Starten Sie durch mit unseren Top-Empfehlungen</p>
+    <main class="min-h-screen">
+        <section class="bg-gradient-to-r from-green-50 to-blue-50 py-16 md:py-24">
+            <div class="max-w-6xl mx-auto px-4 text-center">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+                    Willkommen bei <br>
+                    <span class="text-green-600">FundDepot.de</span>
+                </h1>
+                <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                    Deine vertrauenswürdige Quelle für geprüfte Produktempfehlungen
+                </p>
+                <a href="#top-produkte" 
+                   class="inline-block bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition duration-300 shadow-lg">
+                    Zu den Top-Produkten ➔
+                </a>
+            </div>
+        </section>
+
+        <section id="top-produkte" class="py-16">
+            <div class="max-w-7xl mx-auto px-4">
+                <h2 class="text-3xl font-bold text-gray-800 mb-12 text-center">
+                    🏆 Unsere aktuellen Testsieger
+                </h2>
+
+                <div class="mb-12 flex flex-wrap gap-4 justify-center">
+                    <button onclick="filterProducts('all')" 
+                            class="px-4 py-2 bg-green-600 text-white rounded-lg filter-btn active">
+                        Alle Produkte
+                    </button>
+                    <button onclick="filterProducts('budget')" 
+                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg filter-btn hover:bg-gray-300">
+                        Budget (unter 200€)
+                    </button>
+                    <button onclick="filterProducts('premium')" 
+                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg filter-btn hover:bg-gray-300">
+                        Premium
+                    </button>
+                </div>
+
+                <div id="produkt-container" class="grid gap-8 md:grid-cols-2 lg:grid-cols-3"></div>
+            </div>
+        </section>
     </main>
 
-    <!-- Footer wird hier dynamisch geladen -->
     <div id="footer"></div>
 
+    <script src="/scripts/main.js"></script>
     <script>
-        // Dynamisches Laden von Header und Footer
-        document.addEventListener('DOMContentLoaded', function() {
-            // Header laden
-            fetch('components/header.html')
-                .then(response => response.text())
-                .then(data => document.getElementById('header').innerHTML = data)
-                .catch(error => console.error('Header konnte nicht geladen werden:', error));
-
-            // Footer laden
-            fetch('components/footer.html')
-                .then(response => response.text())
-                .then(data => document.getElementById('footer').innerHTML = data)
-                .catch(error => console.error('Footer konnte nicht geladen werden:', error));
+        function filterProducts(category) {
+            const products = document.querySelectorAll('.produkt-karte');
+            const buttons = document.querySelectorAll('.filter-btn');
+            
+            buttons.forEach(btn => {
+                btn.classList.remove('active', 'bg-green-600', 'text-white');
+                btn.classList.add('bg-gray-200', 'text-gray-700');
+            });
+            
+            event.target.classList.add('active', 'bg-green-600', 'text-white');
+            event.target.classList.remove('bg-gray-200', 'text-gray-700');
+    
+            products.forEach(product => {
+                const price = parseFloat(product.dataset.preis);
+                const show = category === 'all' || 
+                            (category === 'budget' && price < 200) || 
+                            (category === 'premium' && price >= 200);
+                product.style.display = show ? 'block' : 'none';
+            });
+    
+            setTimeout(initImageSwitchers, 50);
+        }
+    
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(initImageSwitchers, 100);
         });
     </script>
-    <script src="scripts/main.js"></script>
 </body>
 </html>

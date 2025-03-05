@@ -1,18 +1,73 @@
 /* Custom CSS Ergänzungen zu Tailwind */
-.hover-scale {
-    transition: transform 0.2s ease-in-out;
+.produkt-karte {
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.hover-scale:hover {
+.produkt-karte:hover {
+    transform: translateY(-5px);
+}
+
+.produkt-karte p {
+    min-height: 72px;
+}
+
+/* Bildwechsel-Styles */
+.thumbnail-container {
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.thumbnail-container:hover {
     transform: scale(1.05);
 }
 
-.loading-spinner {
-    animation: spin 1s linear infinite;
+.thumbnail-container.active-thumbnail {
+    border-color: #10b981;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
 }
 
-@keyframes spin {
-    100% { transform: rotate(360deg); }
+.cursor-zoom-in {
+    cursor: zoom-in;
+}
+
+/* Lightbox-Styles */
+#lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.lightbox-content {
+    position: relative;
+}
+
+.lightbox-content img {
+    max-height: 90vh;
+    max-width: 90vw;
+    border-radius: 0.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: -2rem;
+    right: -2rem;
+    color: white;
+    font-size: 2.25rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.lightbox-close:hover {
+    color: #10b981;
 }
 
 /* Druckoptimierung */

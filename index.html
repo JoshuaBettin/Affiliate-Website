@@ -76,35 +76,56 @@
     </main>
 
     <div id="footer"></div>
-
-    <script src="/scripts/main.js"></script>
-    <script>
-        function filterProducts(category) {
-            const products = document.querySelectorAll('.produkt-karte');
-            const buttons = document.querySelectorAll('.filter-btn');
-            
-            buttons.forEach(btn => {
-                btn.classList.remove('active', 'bg-green-600', 'text-white');
-                btn.classList.add('bg-gray-200', 'text-gray-700');
+    <!DOCTYPE html>
+    <html lang="de">
+    <head>
+        <!-- Unveränderter Head-Bereich -->
+    </head>
+    <body class="bg-gray-50">
+        <div id="header"></div>
+    
+        <!-- Unveränderter Hauptinhalt -->
+    
+        <div id="footer"></div>
+    
+        <script src="/scripts/main.js"></script>
+        <script>
+            function filterProducts(category) {
+                const products = document.querySelectorAll('.produkt-karte');
+                if (!products.length) return;
+    
+                const buttons = document.querySelectorAll('.filter-btn');
+                
+                buttons.forEach(btn => {
+                    btn.classList.remove('active', 'bg-green-600', 'text-white');
+                    btn.classList.add('bg-gray-200', 'text-gray-700');
+                });
+                
+                event.target.classList.add('active', 'bg-green-600', 'text-white');
+                event.target.classList.remove('bg-gray-200', 'text-gray-700');
+    
+                products.forEach(product => {
+                    const price = parseFloat(product.dataset.preis);
+                    const show = category === 'all' || 
+                              (category === 'budget' && price < 200) || 
+                              (category === 'premium' && price >= 200);
+                    product.style.display = show ? 'block' : 'none';
+                });
+    
+                setTimeout(() => {
+                    initImageSwitchers();
+                    initHoverEffects();
+                }, 50);
+            }
+    
+            document.addEventListener('DOMContentLoaded', () => {
+                if (document.getElementById('produkt-container')) {
+                    setTimeout(() => {
+                        initImageSwitchers();
+                        initHoverEffects();
+                    }, 100);
+                }
             });
-            
-            event.target.classList.add('active', 'bg-green-600', 'text-white');
-            event.target.classList.remove('bg-gray-200', 'text-gray-700');
-    
-            products.forEach(product => {
-                const price = parseFloat(product.dataset.preis);
-                const show = category === 'all' || 
-                            (category === 'budget' && price < 200) || 
-                            (category === 'premium' && price >= 200);
-                product.style.display = show ? 'block' : 'none';
-            });
-    
-            setTimeout(initImageSwitchers, 50);
-        }
-    
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(initImageSwitchers, 100);
-        });
-    </script>
-</body>
-</html>
+        </script>
+    </body>
+    </html>

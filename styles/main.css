@@ -1,4 +1,4 @@
-/* Custom CSS Ergänzungen zu Tailwind */
+/* Custom CSS */
 .produkt-karte {
     display: flex;
     flex-direction: column;
@@ -13,31 +13,40 @@
     min-height: 72px;
 }
 
-/* Bildwechsel-Styles */
+/* Hover-Effekte */
+.group:hover .thumbnail-container:not(:hover) {
+    opacity: 0.3 !important;
+    transform: scale(0.95) !important;
+}
+
 .thumbnail-container {
-    transition: all 0.2s ease;
-    border: 2px solid transparent;
+    width: 48px;
+    height: 48px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid transparent;
+    margin: 2px;
+    opacity: 0.9;
 }
 
 .thumbnail-container:hover {
-    transform: scale(1.05);
+    opacity: 1 !important;
+    transform: scale(1.15) !important;
+    border-color: #e5e7eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    z-index: 20;
 }
 
-.thumbnail-container.active-thumbnail {
-    border-color: #10b981;
-    box-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
+.active-thumbnail {
+    border-color: #10b981 !important;
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.4) !important;
 }
 
-.cursor-zoom-in {
-    cursor: zoom-in;
-}
-
-/* Lightbox-Styles */
+/* Lightbox */
 #lightbox-overlay {
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.9);
-    z-index: 50;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -46,13 +55,15 @@
 
 .lightbox-content {
     position: relative;
+    max-width: 90%;
+    max-height: 90vh;
 }
 
 .lightbox-content img {
     max-height: 90vh;
-    max-width: 90vw;
+    max-width: 100%;
     border-radius: 0.5rem;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
 }
 
 .lightbox-close {
@@ -61,18 +72,68 @@
     right: -2rem;
     color: white;
     font-size: 2.25rem;
-    line-height: 1;
     cursor: pointer;
-    transition: color 0.3s ease;
+    transition: color 0.2s;
 }
 
 .lightbox-close:hover {
     color: #10b981;
 }
 
-/* Druckoptimierung */
 @media print {
     header, footer, nav {
         display: none !important;
     }
+}
+
+/* Kategorie-Suche */
+#kategorie-suche {
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+#kategorie-suche:focus {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 
+                0 4px 6px -2px rgba(16, 185, 129, 0.05);
+}
+
+/* Responsive Design für Suche */
+@media (max-width: 640px) {
+    #kategorie-suche {
+        font-size: 0.9rem;
+        padding: 0.75rem;
+    }
+}
+/* Autocomplete-Styles */
+.autocomplete-item {
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-top: 1px solid #f3f4f6;
+}
+
+.autocomplete-item:first-child {
+    border-top: 0;
+}
+
+.autocomplete-item:hover {
+    background-color: #f9fafb;
+}
+
+.autocomplete-highlight {
+    color: #10b981;
+    font-weight: 600;
+}
+
+#autocomplete-container::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+#autocomplete-container::-webkit-scrollbar-track {
+    background-color: #f9fafb;
+}
+
+#autocomplete-container::-webkit-scrollbar-thumb {
+    background-color: #a7f3d0;
+    border-radius: 9999px;
 }

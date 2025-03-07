@@ -21,40 +21,56 @@
     <main class="min-h-screen">
         <section class="py-16">
             <div class="max-w-7xl mx-auto px-4">
-                <h1 class="text-4xl font-bold text-gray-800 mb-12 text-center">
-                    📦 Unsere Produktkategorien
-                </h1>
+                <!-- Suchfeld mit Autocomplete -->
+                <div class="mb-12 relative">
+                    <input type="text" 
+                        id="kategorie-suche" 
+                        placeholder="Kategorie oder Produkt suchen (z.B. 'Wearables', 'Kopfhörer')..."
+                        class="w-full p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        autocomplete="off">
+                    <div id="autocomplete-container" 
+                        class="hidden absolute z-50 w-full bg-white shadow-lg rounded-b-xl max-h-60 overflow-y-auto"></div>
+                </div>
 
-                <div class="bg-white rounded-xl shadow-md mb-12 p-6">
+                <!-- Kategorie 1: Wearables -->
+                <div class="kategorie-section bg-white rounded-xl shadow-md mb-12 p-6" data-kategorie-name="wearables">
                     <div class="flex items-center justify-between mb-8">
                         <h2 class="text-3xl font-semibold text-green-600">
                             🏃 Wearables & Smartwatches
                         </h2>
-                        <span class="text-gray-500">4 Produkte</span>
+                        <span class="text-gray-500">
+                            <span class="product-count" data-kategorie="wearables">0</span> Produkte
+                        </span>
                     </div>
                     <div id="wearables-container" 
                          class="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
                          data-kategorie="wearables"></div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-md mb-12 p-6">
+                <!-- Kategorie 2: Audio -->
+                <div class="kategorie-section bg-white rounded-xl shadow-md mb-12 p-6" data-kategorie-name="audio">
                     <div class="flex items-center justify-between mb-8">
                         <h2 class="text-3xl font-semibold text-green-600">
                             🎧 Audio & Kopfhörer
                         </h2>
-                        <span class="text-gray-500">3 Produkte</span>
+                        <span class="text-gray-500">
+                            <span class="product-count" data-kategorie="audio">0</span> Produkte
+                        </span>
                     </div>
                     <div id="audio-container" 
                          class="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
                          data-kategorie="audio"></div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-md p-6">
+                <!-- Kategorie 3: Zubehör -->
+                <div class="kategorie-section bg-white rounded-xl shadow-md p-6" data-kategorie-name="zubehoer">
                     <div class="flex items-center justify-between mb-8">
                         <h2 class="text-3xl font-semibold text-green-600">
                             🔌 Tech-Zubehör
                         </h2>
-                        <span class="text-gray-500">2 Produkte</span>
+                        <span class="text-gray-500">
+                            <span class="product-count" data-kategorie="zubehoer">0</span> Produkte
+                        </span>
                     </div>
                     <div id="zubehoer-container" 
                          class="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
@@ -68,29 +84,142 @@
 
     <script src="/scripts/main.js"></script>
     <script>
-          document.addEventListener("DOMContentLoaded", async () => {
-        initHeaderFooter();
+        document.addEventListener("DOMContentLoaded", async () => {
+            initHeaderFooter();
     
-        await loadCategoryProducts('wearables-container', 'wearables');
-        await loadCategoryProducts('audio-container', 'audio');
-        await loadCategoryProducts('zubehoer-container', 'zubehoer');
-        
-        setTimeout(() => {
-            initImageSwitchers();
+            // Kategorien initial laden
+            await loadCategoryProducts('wearables-container', 'wearables');
+            await loadCategoryProducts('audio-container', 'audio');
+            await loadCategoryProducts('zubehoer-container', 'zubehoer');
+            
             enforceCardHeights();
-        }, 100);
-    });
+            initImageSwitchers();
+            initHoverEffects();
+
+            // Suchfunktionalität hinzufügen
+            const searchInput = document.getElementById('kategorie-suche');
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const autocompleteContainer = document.getElementById('autocomplete-container');
+                
+                // Kategorien filtern
+                document.querySelectorAll('.kategorie-section').forEach(section => {
+                    const categoryName = section.getAttribute('data-kategorie-name').toLowerCase();
+                    let hasMatch = categoryName.includes(searchTerm);
+
+                    // Produkte in der Kategorie prüfen
+                    if (!hasMatch) {
+                        const productCards = section.querySelectorAll('.produkt-karte');
+                        productCards.forEach(card => {
+                            const productNameElement = card.querySelector('.produkt-name');
+                            if (productNameElement && productNameElement.textContent.toLowerCase().includes(searchTerm)) {
+                                hasMatch = true;
+                            }
+                        });
+                    }
+
+                    section.style.display = hasMatch ? 'block' : 'none';
+                });
+
+                // Autocomplete erstellen
+                autocompleteContainer.innerHTML = '';
+                autocompleteContainer.classList.toggle('hidden', searchTerm === '');
+
+                if (searchTerm === '') return;
+
+                // Kategorien sammeln
+                const categories = Array.from(document.querySelectorAll('.kategorie-section')).map(section => ({
+                    name: section.getAttribute('data-kategorie-name'),
+                    displayName: section.querySelector('h2').textContent.trim()
+                }));
+
+                // Produkte sammeln
+                const products = Array.from(document.querySelectorAll('.produkt-karte')).map(card => ({
+                    name: card.querySelector('.produkt-name').textContent.trim(),
+                    category: card.closest('.kategorie-section').getAttribute('data-kategorie-name')
+                }));
+
+                // Vorschläge filtern
+                const matchedCategories = categories.filter(cat => 
+                    cat.name.toLowerCase().includes(searchTerm) || 
+                    cat.displayName.toLowerCase().includes(searchTerm)
+                );
+
+                const matchedProducts = products.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm)
+                );
+
+                // Vorschläge anzeigen
+                const fragment = document.createDocumentFragment();
+
+                matchedCategories.forEach(cat => {
+                    const div = document.createElement('div');
+                    div.className = 'p-4 hover:bg-gray-100 cursor-pointer';
+                    div.textContent = `🔍 Kategorie: ${cat.displayName}`;
+                    div.onclick = () => {
+                        searchInput.value = cat.displayName;
+                        autocompleteContainer.classList.add('hidden');
+                        searchInput.dispatchEvent(new Event('input'));
+                    };
+                    fragment.appendChild(div);
+                });
+
+                matchedProducts.forEach(product => {
+                    const div = document.createElement('div');
+                    div.className = 'p-4 hover:bg-gray-100 cursor-pointer';
+                    div.textContent = `📦 Produkt: ${product.name}`;
+                    div.onclick = () => {
+                        searchInput.value = product.name;
+                        autocompleteContainer.classList.add('hidden');
+                        searchInput.dispatchEvent(new Event('input'));
+                    };
+                    fragment.appendChild(div);
+                });
+
+                if (fragment.childElementCount === 0) {
+                    const div = document.createElement('div');
+                    div.className = 'p-4 text-gray-500';
+                    div.textContent = 'Keine Ergebnisse gefunden';
+                    fragment.appendChild(div);
+                }
+
+                autocompleteContainer.appendChild(fragment);
+            });
+
+            // Klick außerhalb schließt Autocomplete
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.relative')) {
+                    document.getElementById('autocomplete-container').classList.add('hidden');
+                }
+            });
+        });
 
         async function loadCategoryProducts(containerId, kategorie) {
             try {
                 const products = await loadAllProducts();
                 const container = document.getElementById(containerId);
+                const normalizedKategorie = kategorie.toLowerCase();
+                const countElement = document.querySelector(`.product-count[data-kategorie="${normalizedKategorie}"]`);
                 
-                const filtered = Array.from(products).filter(product => {
-                    return product.dataset.kategorie.split(' ').includes(kategorie);
+                const filtered = products.filter(product => {
+                    const categories = product.dataset.kategorie.split(' ');
+                    return categories.includes(normalizedKategorie);
                 });
 
                 container.innerHTML = filtered.map(p => p.outerHTML).join('');
+                
+                if(countElement) {
+                    countElement.textContent = filtered.length;
+                    countElement.nextSibling.textContent = 
+                        filtered.length === 1 ? ' Produkt' : ' Produkte';
+                }
+
+                // Neuinitialisierung der Interaktionen
+                setTimeout(() => {
+                    initImageSwitchers();
+                    initHoverEffects();
+                }, 50);
+
             } catch (error) {
                 console.error(`Fehler beim Laden von ${containerId}:`, error);
                 document.getElementById(containerId).innerHTML = `
@@ -98,7 +227,7 @@
                 `;
             }
         }
-
+            
         async function loadAllProducts() {
             const products = [
                 '/components/products/product1.html',

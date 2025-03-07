@@ -1,18 +1,22 @@
 <article class="produkt-karte bg-white rounded-xl shadow-md hover:shadow-lg transition flex flex-col" 
-         data-preis="149" data-kategorie="audio premium">
-    <div class="relative">
+         data-preis="149" data-kategorie="audio premium zubehoer wearables">
+    <div class="relative group">
         <img id="main-image" 
              src="/images/kopfhoerer.jpg" 
              alt="Noise Cancelling Kopfhörer" 
-             class="w-full h-64 object-cover rounded-t-xl cursor-zoom-in"
+             class="w-full h-64 object-cover rounded-t-xl cursor-zoom-in transition-transform duration-300 group-hover:scale-[1.02]"
              loading="lazy"
              onclick="openLightbox(this.src)">
-        <div class="absolute bottom-2 left-2 flex gap-2">
-            <div class="thumbnail-container w-16 h-16 bg-white/80 rounded-lg overflow-hidden cursor-pointer hover:scale-105 transition-transform"
+        <div class="absolute bottom-2 left-2 flex gap-1">
+            <div class="thumbnail-container w-12 h-12 bg-white/80 rounded-lg overflow-hidden cursor-pointer transition-all duration-300 opacity-90 hover:opacity-100 hover:!scale-110 active-thumbnail"
+                 onclick="switchImage('/images/kopfhoerer.jpg', this)">
+                <img src="/images/kopfhoerer.jpg" class="w-full h-full object-cover">
+            </div>
+            <div class="thumbnail-container w-12 h-12 bg-white/80 rounded-lg overflow-hidden cursor-pointer transition-all duration-300 opacity-90 hover:opacity-100 hover:!scale-110"
                  onclick="switchImage('/images/kopfhoerer-2.jpg', this)">
                 <img src="/images/kopfhoerer-2.jpg" class="w-full h-full object-cover">
             </div>
-            <div class="thumbnail-container w-16 h-16 bg-white/80 rounded-lg overflow-hidden cursor-pointer hover:scale-105 transition-transform"
+            <div class="thumbnail-container w-12 h-12 bg-white/80 rounded-lg overflow-hidden cursor-pointer transition-all duration-300 opacity-90 hover:opacity-100 hover:!scale-110"
                  onclick="switchImage('/images/kopfhoerer-3.jpg', this)">
                 <img src="/images/kopfhoerer-3.jpg" class="w-full h-full object-cover">
             </div>
